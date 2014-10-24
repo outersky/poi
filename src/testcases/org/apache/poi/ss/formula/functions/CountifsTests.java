@@ -34,7 +34,7 @@ public class CountifsTests extends TestCase {
         Cell cellC1 = row1.createCell(2, Cell.CELL_TYPE_NUMERIC);
         Cell cellD1 = row1.createCell(3, Cell.CELL_TYPE_NUMERIC);
         Cell cellE1 = row1.createCell(4, Cell.CELL_TYPE_NUMERIC);
-        cellB1.setCellValue(1);
+        cellB1.setCellValue(2);
         cellC1.setCellValue(1);
         cellD1.setCellValue(2);
         cellE1.setCellValue(4);
@@ -42,7 +42,7 @@ public class CountifsTests extends TestCase {
         cellA1.setCellFormula("COUNTIFS(B1:C1,1, D1:E1,2)");
         FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
         CellValue evaluate = evaluator.evaluate(cellA1);
-        assertEquals(1.0d, evaluate.getNumberValue());
+        assertEquals(0.0d, evaluate.getNumberValue());
     }
 
     public void testCallFunction_invalidArgs() {
