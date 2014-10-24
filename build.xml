@@ -131,6 +131,9 @@ under the License.
     <property name="excelant.testokfile" location="build/excelant-testokfile.txt"/>
 
     <!-- jars in the /lib directory, see the fetch-jars target-->
+    <property name="main.commons-collections.jar" location="${main.lib}/commons-collections-3.2.1.jar"/>
+    <property name="main.commons-collections.url"
+              value="${repository.m2}/maven2/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>
     <property name="main.commons-logging.jar" location="${main.lib}/commons-logging-1.1.3.jar"/>
     <property name="main.commons-logging.url"
               value="${repository.m2}/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar"/>
@@ -231,6 +234,7 @@ under the License.
 
     <path id="main.classpath">
         <pathelement location="${main.commons-logging.jar}"/>
+        <pathelement location="${main.commons-collections.jar}"/>
         <pathelement location="${main.commons-codec.jar}"/>
         <pathelement location="${main.log4j.jar}"/>
         <pathelement location="${main.junit.jar}"/>
@@ -398,6 +402,7 @@ under the License.
             <or>
                 <and>
                     <available file="${main.commons-logging.jar}"/>
+                    <available file="${main.commons-collections.jar}"/>
                     <available file="${main.commons-codec.jar}"/>
                     <available file="${main.log4j.jar}"/>
                     <available file="${main.junit.jar}"/>
@@ -423,6 +428,10 @@ under the License.
         <antcall target="downloadfile">
             <param name="sourcefile" value="${main.commons-logging.url}"/>
             <param name="destfile" value="${main.commons-logging.jar}"/>
+        </antcall>
+        <antcall target="downloadfile">
+            <param name="sourcefile" value="${main.commons-collections.url}"/>
+            <param name="destfile" value="${main.commons-collections.jar}"/>
         </antcall>
         <antcall target="downloadfile">
             <param name="sourcefile" value="${main.commons-codec.url}"/>
