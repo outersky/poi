@@ -243,7 +243,8 @@ public final class WorkbookEvaluator {
 
 	public ValueEval evaluate(EvaluationCell srcCell) {
 		int sheetIndex = getSheetIndex(srcCell.getSheet());
-		return evaluateAny(srcCell, sheetIndex, srcCell.getRowIndex(), srcCell.getColumnIndex(), new EvaluationTracker(_cache));
+                return evaluateAny(srcCell, sheetIndex, srcCell.getRowIndex(), srcCell.getColumnIndex(), null );
+//                return evaluateAny(srcCell, sheetIndex, srcCell.getRowIndex(), srcCell.getColumnIndex(), new EvaluationTracker(_cache));
 	}
 
 	/**
@@ -280,19 +281,25 @@ public final class WorkbookEvaluator {
 		if (srcCell == null || srcCell.getCellType() != Cell.CELL_TYPE_FORMULA) {
 			ValueEval result = getValueFromNonFormulaCell(srcCell);
 			if (shouldCellDependencyBeRecorded) {
+                            if(tracker!=null){
 				tracker.acceptPlainValueDependency(_workbookIx, sheetIndex, rowIndex, columnIndex, result);
+                            }
 			}
 			return result;
 		}
 
-		FormulaCellCacheEntry cce = _cache.getOrCreateFormulaCellEntry(srcCell);
-		if (shouldCellDependencyBeRecorded || cce.isInputSensitive()) {
-			tracker.acceptFormulaDependency(cce);
-		}
+		// FormulaCellCacheEntry cce = _cache.getOrCreateFormulaCellEntry(srcCell);
+		FormulaCellCacheEntry cce = null; // _cache.getOrCreateFormulaCellEntry(srcCell);
+//		if (shouldCellDependencyBeRecorded || cce.isInputSensitive()) {
+//                    if(tracker!=null){
+//			tracker.acceptFormulaDependency(cce);
+//                    }
+//		}
 		IEvaluationListener evalListener = _evaluationListener;
 		ValueEval result;
-		if (cce.getValue() == null) {
-			if (!tracker.startEvaluate(cce)) {
+		if (cce==null || cce.getValue() == null) {
+                    
+			if (tracker!=null && !tracker.startEvaluate(cce)) {
 				return ErrorEval.CIRCULAR_REF_ERROR;
 			}
 			OperationEvaluationContext ec = new OperationEvaluationContext(this, _workbook, sheetIndex, rowIndex, columnIndex, tracker);
@@ -307,8 +314,9 @@ public final class WorkbookEvaluator {
 					result = evaluateFormula(ec, ptgs);
 					evalListener.onEndEvaluate(cce, result);
 				}
-
-				tracker.updateCacheResult(result);
+                                if(tracker!=null){
+                                    tracker.updateCacheResult(result);
+                                }
 			}
 			 catch (NotImplementedException e) {
 				throw addExceptionInfo(e, sheetIndex, rowIndex, columnIndex);
@@ -339,7 +347,9 @@ public final class WorkbookEvaluator {
 					 throw re;
 				 }
 			 } finally {
+                            if(tracker!=null){
 				tracker.endEvaluate(cce);
+                            }
 			}
 		} else {
 			if(evalListener != null) {
@@ -738,9 +748,9 @@ public final class WorkbookEvaluator {
 	 */
 	/* package */ ValueEval evaluateReference(EvaluationSheet sheet, int sheetIndex, int rowIndex,
 			int columnIndex, EvaluationTracker tracker) {
-
 		EvaluationCell cell = sheet.getCell(rowIndex, columnIndex);
 		return evaluateAny(cell, sheetIndex, rowIndex, columnIndex, tracker);
+//		return evaluateAny(sheet.getCell(rowIndex, columnIndex), sheetIndex, rowIndex, columnIndex, tracker);
 	}
 	public FreeRefFunction findUserDefinedFunction(String functionName) {
 		return _udfFinder.findFunction(functionName);

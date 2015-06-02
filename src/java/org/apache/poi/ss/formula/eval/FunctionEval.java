@@ -24,67 +24,7 @@ import java.util.TreeSet;
 import org.apache.poi.ss.formula.atp.AnalysisToolPak;
 import org.apache.poi.ss.formula.function.FunctionMetadata;
 import org.apache.poi.ss.formula.function.FunctionMetadataRegistry;
-import org.apache.poi.ss.formula.functions.Address;
-import org.apache.poi.ss.formula.functions.AggregateFunction;
-import org.apache.poi.ss.formula.functions.BooleanFunction;
-import org.apache.poi.ss.formula.functions.CalendarFieldFunction;
-import org.apache.poi.ss.formula.functions.Choose;
-import org.apache.poi.ss.formula.functions.Code;
-import org.apache.poi.ss.formula.functions.Column;
-import org.apache.poi.ss.formula.functions.Columns;
-import org.apache.poi.ss.formula.functions.Count;
-import org.apache.poi.ss.formula.functions.Counta;
-import org.apache.poi.ss.formula.functions.Countblank;
-import org.apache.poi.ss.formula.functions.Countif;
-import org.apache.poi.ss.formula.functions.DateFunc;
-import org.apache.poi.ss.formula.functions.Days360;
-import org.apache.poi.ss.formula.functions.Errortype;
-import org.apache.poi.ss.formula.functions.Even;
-import org.apache.poi.ss.formula.functions.FinanceFunction;
-import org.apache.poi.ss.formula.functions.Function;
-import org.apache.poi.ss.formula.functions.Hlookup;
-import org.apache.poi.ss.formula.functions.Hyperlink;
-import org.apache.poi.ss.formula.functions.IPMT;
-import org.apache.poi.ss.formula.functions.IfFunc;
-import org.apache.poi.ss.formula.functions.Index;
-import org.apache.poi.ss.formula.functions.Intercept;
-import org.apache.poi.ss.formula.functions.Irr;
-import org.apache.poi.ss.formula.functions.LogicalFunction;
-import org.apache.poi.ss.formula.functions.Lookup;
-import org.apache.poi.ss.formula.functions.Match;
-import org.apache.poi.ss.formula.functions.MinaMaxa;
-import org.apache.poi.ss.formula.functions.Mirr;
-import org.apache.poi.ss.formula.functions.Mode;
-import org.apache.poi.ss.formula.functions.Na;
-import org.apache.poi.ss.formula.functions.NotImplementedFunction;
-import org.apache.poi.ss.formula.functions.Now;
-import org.apache.poi.ss.formula.functions.Npv;
-import org.apache.poi.ss.formula.functions.NumericFunction;
-import org.apache.poi.ss.formula.functions.Odd;
-import org.apache.poi.ss.formula.functions.Offset;
-import org.apache.poi.ss.formula.functions.PPMT;
-import org.apache.poi.ss.formula.functions.Rank;
-import org.apache.poi.ss.formula.functions.Rate;
-import org.apache.poi.ss.formula.functions.Replace;
-import org.apache.poi.ss.formula.functions.Rept;
-import org.apache.poi.ss.formula.functions.Roman;
-import org.apache.poi.ss.formula.functions.RowFunc;
-import org.apache.poi.ss.formula.functions.Rows;
-import org.apache.poi.ss.formula.functions.Slope;
-import org.apache.poi.ss.formula.functions.Substitute;
-import org.apache.poi.ss.formula.functions.Subtotal;
-import org.apache.poi.ss.formula.functions.Sumif;
-import org.apache.poi.ss.formula.functions.Sumproduct;
-import org.apache.poi.ss.formula.functions.Sumx2my2;
-import org.apache.poi.ss.formula.functions.Sumx2py2;
-import org.apache.poi.ss.formula.functions.Sumxmy2;
-import org.apache.poi.ss.formula.functions.T;
-import org.apache.poi.ss.formula.functions.TextFunction;
-import org.apache.poi.ss.formula.functions.TimeFunc;
-import org.apache.poi.ss.formula.functions.Today;
-import org.apache.poi.ss.formula.functions.Value;
-import org.apache.poi.ss.formula.functions.Vlookup;
-import org.apache.poi.ss.formula.functions.WeekdayFunc;
+import org.apache.poi.ss.formula.functions.*;
 
 /**
  * @author Amol S. Deshmukh &lt; amolweb at ya hoo dot com &gt;
@@ -305,6 +245,8 @@ public final class FunctionEval {
 
         retval[362] = MinaMaxa.MAXA;
         retval[363] = MinaMaxa.MINA;
+
+        retval[364] = new Averageif();  // added by Ludongping
 
         for (int i = 0; i < retval.length; i++) {
             Function f = retval[i];

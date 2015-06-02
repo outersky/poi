@@ -350,6 +350,21 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
         }
     }
 
+    HSSFRow[] _frozenRows;
+    public void freeze(){
+        int maxIndex = 0;
+        for(int rowIndex : _rows.keySet()){
+            if(rowIndex>maxIndex){
+                maxIndex = rowIndex;
+            }
+        }
+        HSSFRow[] frozenRows = new HSSFRow[maxIndex+1];
+        for(HSSFRow row : _rows.values()){
+            frozenRows[row.getRowNum()] = row;
+        }
+        _frozenRows = frozenRows;
+    }
+
     /**
      * Returns the logical row (not physical) 0-based.  If you ask for a row that is not
      * defined you get a null.  This is to say row 4 represents the fifth row on a sheet.
@@ -358,6 +373,13 @@ public final class HSSFSheet implements org.apache.poi.ss.usermodel.Sheet {
      * @return HSSFRow representing the row number or null if its not defined on the sheet
      */
     public HSSFRow getRow(int rowIndex) {
+        if(_frozenRows!=null){
+            if(rowIndex>=0 && rowIndex<_frozenRows.length) {
+                return _frozenRows[rowIndex];
+            }else{
+                return null;
+            }
+        }
         return _rows.get(Integer.valueOf(rowIndex));
     }
 

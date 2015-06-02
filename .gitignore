@@ -3,3 +3,5 @@ build/
 lib/
 compile-lib/
 ooxml-lib/
+/nbproject/private/
+/dist/

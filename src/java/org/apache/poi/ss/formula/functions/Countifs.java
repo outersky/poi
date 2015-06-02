@@ -30,8 +30,15 @@ import org.apache.poi.ss.formula.eval.*;
 public class Countifs implements FreeRefFunction {
     public static final FreeRefFunction instance = new Countifs();
 
+//    static int count = 0;
+//    public static long times = 0;
+    
     @Override
     public ValueEval evaluate(ValueEval[] args, OperationEvaluationContext ec) {
+//        System.err.println("Countifs " + ++count );
+//        long time = System.currentTimeMillis();
+//        try{
+            
         if (args.length == 0 || args.length % 2 != 0) {
             return ErrorEval.VALUE_INVALID;
         }
@@ -53,6 +60,9 @@ public class Countifs implements FreeRefFunction {
         } catch (EvaluationException e) {
             return e.getErrorEval();
         }
+//        }finally{
+//            times += System.currentTimeMillis() - time;
+//        }
     }
 
     /**
@@ -98,8 +108,10 @@ public class Countifs implements FreeRefFunction {
         int height = ranges[0].getHeight();
         int width = ranges[0].getWidth();
 
+//        System.err.println("Width: " + width);
         int result = 0;
         for (int r = 0; r < height; r++) {
+            outer: 
             for (int c = 0; c < width; c++) {
 
                 boolean matches = true;
@@ -109,8 +121,9 @@ public class Countifs implements FreeRefFunction {
 
                     ValueEval relativeValue = aeRange.getRelativeValue(r, c);
                     if (!mp.matches(relativeValue)) {
-                        matches = false;
-                        break;
+                        continue outer;
+//                        matches = false;
+//                        break;
                     }
 
                 }
