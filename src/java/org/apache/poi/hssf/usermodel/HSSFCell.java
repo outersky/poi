@@ -40,7 +40,7 @@ import org.apache.poi.hssf.record.aggregates.FormulaRecordAggregate;
 import org.apache.poi.hssf.record.common.UnicodeString;
 import org.apache.poi.ss.SpreadsheetVersion;
 import org.apache.poi.ss.formula.FormulaType;
-import org.apache.poi.ss.formula.eval.ErrorEval;
+import org.apache.poi.ss.formula.eval.*;
 import org.apache.poi.ss.formula.ptg.ExpPtg;
 import org.apache.poi.ss.formula.ptg.Ptg;
 import org.apache.poi.ss.usermodel.Cell;
@@ -896,7 +896,7 @@ public class HSSFCell implements Cell {
      * @see org.apache.poi.hssf.usermodel.HSSFWorkbook#getCellStyleAt(short)
      */
     public void setCellStyle(CellStyle style) {
-        setCellStyle( (HSSFCellStyle)style );
+        setCellStyle((HSSFCellStyle) style);
     }
     public void setCellStyle(HSSFCellStyle style) {
         // A style of null means resetting back to the default style
@@ -1211,5 +1211,22 @@ public class HSSFCell implements Cell {
         }
 
         return styleIndex;
+    }
+
+    public ValueEval getValueEval() {
+        int cellType = getCellType();
+        switch (cellType) {
+            case Cell.CELL_TYPE_NUMERIC:
+                return new NumberEval(getNumericCellValue());
+            case Cell.CELL_TYPE_STRING:
+                return new StringEval(getStringCellValue());
+            case Cell.CELL_TYPE_BOOLEAN:
+                return BoolEval.valueOf(getBooleanCellValue());
+            case Cell.CELL_TYPE_BLANK:
+                return BlankEval.instance;
+            case Cell.CELL_TYPE_ERROR:
+                return ErrorEval.valueOf(getErrorCellValue());
+        }
+        throw new RuntimeException("Unexpected cell type (" + cellType + ")");
     }
 }

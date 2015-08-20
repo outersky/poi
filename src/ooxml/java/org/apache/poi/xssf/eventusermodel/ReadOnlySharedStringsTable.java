@@ -18,8 +18,7 @@ package org.apache.poi.xssf.eventusermodel;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -92,6 +91,8 @@ public class ReadOnlySharedStringsTable extends DefaultHandler {
      * The shared strings table.
      */
     private List<String> strings;
+
+    private Deque<String> tagStack = new ArrayDeque<String>();
 
     /**
      * @param pkg
@@ -196,9 +197,25 @@ public class ReadOnlySharedStringsTable extends DefaultHandler {
             characters = new StringBuffer();
         } else if ("si".equals(name)) {
             characters.setLength(0);
-        } else if ("t".equals(name)) {
+        } else if ("t".equals(name) && "si".equalsIgnoreCase(tagStack.peek())) {
+            /*
+               Only available where "t" is the direct child of "si".
+               'cause Office 2015 introduces a new structure:
+
+               <si>
+                    <t>xxx</t>
+                    <rPh sb="0" eb="1">
+                        <t>shi'gong</t>
+                    </rPh>
+                    <rPh sb="2" eb="3">
+                        <t>qing'k</t>
+                    </rPh>
+                    <phoneticPr fontId="2" type="noConversion"/>
+                </si>
+              */
             tIsOpen = true;
         }
+        tagStack.push(name);
     }
 
     public void endElement(String uri, String localName, String name)
@@ -208,6 +225,7 @@ public class ReadOnlySharedStringsTable extends DefaultHandler {
         } else if ("t".equals(name)) {
            tIsOpen = false;
         }
+        tagStack.pop();
     }
 
     /**

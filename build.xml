@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -31,7 +31,7 @@ under the License.
         Dominik Stadler     centic at apache.org
 
     This build was tested with ant 1.9.4 although it will probably work with
-    other versions, however at least 1.8.0 is required.  The following jar 
+    other versions, however at least 1.8.0 is required.  The following jar
 	files should be available on the classpath when running ant:
 
     LIBRARY         LOCATION
@@ -41,7 +41,7 @@ under the License.
     To build the documentation you will need to install forrest and set
     the FORREST_HOME environment variable.  Forrest 0.5.1 required.
 
-    Since POI 3.11 you will need JDK 1.6 or newer to build POI. 
+    Since POI 3.11 you will need JDK 1.6 or newer to build POI.
 
     Some people may find the tests hang when run through Ant. If this
     happens to you, try giving Ant some more memory when you run it, eg:
@@ -69,9 +69,9 @@ under the License.
     <property name="jdk.version.class" value="1.6" description="JDK version of generated class files"/>
     <property name="compile.debug" value="true"/>
 
-    <!-- 
-        Logging is suppressed by default. 
-        To redirect log output to console, run ant with -Dorg.apache.poi.util.POILogger=org.apache.poi.util.SystemOutLogger  
+    <!--
+        Logging is suppressed by default.
+        To redirect log output to console, run ant with -Dorg.apache.poi.util.POILogger=org.apache.poi.util.SystemOutLogger
     -->
     <property name="org.apache.poi.util.POILogger" value="org.apache.poi.util.NullLogger"/>
 
@@ -87,7 +87,7 @@ under the License.
     <property name="POI.testdata.path" value="test-data"/>
     <property name="java.awt.headless" value="true"/>
 	<property name="additionaljar" value=""/>
-    
+
     <!-- Main: -->
     <property name="main.resource1.dir" value="src/resources/main"/>
     <property name="main.src" location="src/java"/>
@@ -168,13 +168,13 @@ under the License.
     <property name="ooxml.xmlbeans26.jar" location="${ooxml.lib}/xmlbeans-2.6.0.jar"/>
     <property name="ooxml.xmlbeans26.url"
               value="${repository.m2}/maven2/org/apache/xmlbeans/xmlbeans/2.6.0/xmlbeans-2.6.0.jar"/>
-	
+
     <!-- coverage libs -->
     <property name="jacoco.zip" location="${main.lib}/jacoco-0.7.1.201405082137.zip"/>
     <property name="jacoco.url" value="${repository.m2}/maven2/org/jacoco/jacoco/0.7.1.201405082137/jacoco-0.7.1.201405082137.zip"/>
     <property name="asm.jar" location="${main.lib}/asm-all-5.0.3.jar"/>
     <property name="asm.url" value="${repository.m2}/maven2/org/ow2/asm/asm-all/5.0.3/asm-all-5.0.3.jar"/>
-	
+
     <!-- license checks -->
     <property name="rat.jar" location="${main.lib}/apache-rat-0.11.jar"/>
     <property name="rat.url" value="${repository.m2}/maven2/org/apache/rat/apache-rat/0.11/apache-rat-0.11.jar"/>
@@ -216,7 +216,7 @@ under the License.
 
     <!-- Apache RAT license check properties -->
     <property name="rat.reportdir" value="build/rat"/>
-    <property name="rat.report" value="${rat.reportdir}/report.txt"/>    
+    <property name="rat.report" value="${rat.reportdir}/report.txt"/>
 
     <!-- build and distro settings -->
     <property name="jar.name" value="poi"/>
@@ -331,7 +331,7 @@ under the License.
     <target name="help" description="Prints Apache POI's Ant usage help">
       <echo>
   This is POI ${version.id}
-  Java Version ${ant.java.version}      
+  Java Version ${ant.java.version}
   Timestamp ${DSTAMP}
   The main targets of interest are:
     - clean       Erase all build work products (ie. everything in the build directory)
@@ -365,7 +365,7 @@ under the License.
         <mkdir dir="${dist.dir}"/>
         <mkdir dir="${build.site}"/>
 
-		<echo message="Using Java: ${java.version}/${java.runtime.version}/${java.vm.version}/${java.vm.name} from ${java.vm.vendor} on ${os.name}: ${os.version}" />		
+		<echo message="Using Java: ${java.version}/${java.runtime.version}/${java.vm.version}/${java.vm.name} from ${java.vm.vendor} on ${os.name}: ${os.version}" />
     </target>
 
     <target name="clean">
@@ -381,7 +381,7 @@ under the License.
     </target>
 
     <target name="check-jars">
-    	<!-- remove previous versions of third-party jars to prevent them from lingering around, 
+    	<!-- remove previous versions of third-party jars to prevent them from lingering around,
     		we often had hard-to-find build/CI-problems because of these! -->
 		<delete verbose="true">
 			<fileset dir="${main.lib}">
@@ -394,7 +394,7 @@ under the License.
 				<include name="org.jacoco.*-0.6.*"/>
 				<include name="dom4j*"/>
 				<include name="apache-rat-0.10*"/>
-				<include name="xercesImpl-*.jar"/> 
+				<include name="xercesImpl-*.jar"/>
 			</fileset>
 		</delete>
 
@@ -605,7 +605,7 @@ under the License.
     	<property name="ooxml.enc.xsds.tmp.dir" location="build/ooxml-encryption-xsds"/>
         <mkdir dir="${ooxml.enc.xsds.tmp.dir}"/>
         <unzip src="${ooxml.lib}/${ooxml.xsds.izip.2}" dest="${ooxml.enc.xsds.tmp.dir}"/>
-    	
+
     	<copy todir="${ooxml.enc.xsds.tmp.dir}">
     		<fileset dir="${ooxml.lib}" includes="dc*.xsd,xmldsig*.xsd,XAdES*.xsd"/>
     		<fileset dir="${ooxml.encryption.xsd.dir}"/>
@@ -619,7 +619,7 @@ under the License.
                 srcgendir="${ooxml.encryption.src.dir}"
                 optimize="yes"
                 destfile="${ooxml.encryption.jar}"
-                javasource="1.5" 
+                javasource="1.5"
                 failonerror="true"
                 fork="true"
                 memoryMaximumSize="${ooxml.memory}"
@@ -642,6 +642,9 @@ under the License.
     <target name="compile-all" depends="compile,compile-ooxml-lite"/>
 
     <target name="compile-main" depends="init">
+      <property name="myclasspath" refid="main.classpath"/>
+      <echo message="Classpath: = ${myclasspath}"/>
+
         <javac target="${jdk.version.class}"
                source="${jdk.version.source}"
                destdir="${main.output.dir}"
@@ -671,6 +674,8 @@ under the License.
     </target>
 
     <target name="compile-scratchpad" depends="compile-main">
+        <property name="scratchpadclasspath" refid="scratchpad.classpath"/>
+        <echo message="Classpath: = ${scratchpadclasspath}"/>
         <javac target="${jdk.version.class}"
                source="${jdk.version.source}"
                destdir="${scratchpad.output.dir}"
@@ -831,7 +836,7 @@ under the License.
                     <include name="*.exec"/>
                 </fileset>
             </executiondata>
-                               
+
             <structure name="Apache POI">
                 <group name="Main">
                     <classfiles>
@@ -878,11 +883,11 @@ under the License.
                     </sourcefiles>
                 </group>
             </structure>
-        
+
             <html destdir="${coverage.dir}"/>
             <xml destfile="${coverage.dir}/coverage.xml"/>
-        </jacoco:report>        
-        
+        </jacoco:report>
+
         <echo message="Coverage results are available at coverage\index.html, coverage/coverage.xml" />
     </target>
 
@@ -946,12 +951,12 @@ under the License.
                 <jvmarg value="${poi.test.locale}"/>
                 <jvmarg value="-ea"/>
             	<jvmarg value="-Dadditionaljar=${additionaljar}"/>
-                <!-- 
-                  YK: ensure that JUnit has enough memory to run tests. 
-                  Without the line below tests fail on Mac OS X with jdk-1.6.26 
-                  and on Windows with jdk-1.5.22 
+                <!--
+                  YK: ensure that JUnit has enough memory to run tests.
+                  Without the line below tests fail on Mac OS X with jdk-1.6.26
+                  and on Windows with jdk-1.5.22
                 -->
-                <jvmarg value="-Xmx256M"/>            
+                <jvmarg value="-Xmx256M"/>
                 <formatter type="plain"/>
                 <formatter type="xml"/>
                 <batchtest todir="${scratchpad.reports.test}">
@@ -977,7 +982,7 @@ under the License.
         </uptodate>
     </target>
 
-    <macrodef name="ooxml-test-runner" xmlns:jacoco="antlib:org.jacoco.ant">    
+    <macrodef name="ooxml-test-runner" xmlns:jacoco="antlib:org.jacoco.ant">
         <attribute name="classpath"/>
         <attribute name="type"/>
         <sequential>
@@ -1022,7 +1027,7 @@ under the License.
               </junit>
             </jacoco:coverage>
         </sequential>
-    </macrodef>    
+    </macrodef>
 
     <target name="test-ooxml" depends="compile-main,compile-ooxml,-test-ooxml-check,jacocotask" unless="ooxml.test.notRequired">
         <ooxml-test-runner classpath="test.ooxml.classpath" type="ooxml"/>
@@ -1042,7 +1047,7 @@ under the License.
     		<zipfileset includes="**/*" src="${ooxml.xsds.jar}"/>
         	<zipfileset includes="**/*" src="${ooxml.encryption.jar}"/>
         </jar>
-    	
+
         <java classname="org.apache.poi.util.OOXMLLite" fork="yes">
         	<classpath>
         		<pathelement path="${ooxml.lite-merged.dir}/ooxml-lite-merged.jar"/>
@@ -1066,7 +1071,7 @@ under the License.
         <echo message="Running ooxml tests against 'poi-ooxml-schemas'"/>
         <ooxml-test-runner classpath="ooxml-lite.classpath" type="ooxml-lite"/>
     </target>
-    
+
     <target name="-test-excelant-check">
         <uptodate property="excelant.test.notRequired" targetfile="${excelant.testokfile}">
             <srcfiles dir="${excelant.src}"/>
@@ -1146,7 +1151,7 @@ under the License.
     <target name="javadocs"
             description="Generates the API documentation">
         <javadoc verbose="false" author="true" destdir="${apidocs.report.dir}"
-                 windowtitle="POI API Documentation" use="true" version="true" 
+                 windowtitle="POI API Documentation" use="true" version="true"
                  maxmemory="384M" additionalparam="-notimestamp">
 
             <packageset dir="${main.src}" defaultexcludes="yes">
@@ -1352,7 +1357,7 @@ under the License.
     </target>
 
     <target name="assemble" depends="jar,jar-src">
-         <!-- jars to include in binary assemblies -->         
+         <!-- jars to include in binary assemblies -->
          <patternset id="bin.dist.jars">
             <include name="${jar.name}-${version.id}-${DSTAMP}.jar"/>
             <include name="${jar.name}-scratchpad-${version.id}-${DSTAMP}.jar"/>
@@ -1360,9 +1365,9 @@ under the License.
             <include name="${jar.name}-examples-${version.id}-${DSTAMP}.jar"/>
             <include name="${jar.name}-ooxml-schemas-${version.id}-${DSTAMP}.jar"/>
             <include name="${jar.name}-excelant-${version.id}-${DSTAMP}.jar"/>
-         </patternset>  
+         </patternset>
 
-        <!-- patterns to exclude from source assemblies -->         
+        <!-- patterns to exclude from source assemblies -->
         <patternset id="src.dist.patterns"
             excludes="build/**,
                       maven/**,
@@ -1380,7 +1385,7 @@ under the License.
                       .classpath,
                       .settings/**,
                       .project"/>
-         
+
         <property name="zipdir" value="${jar.name}-${version.id}"/>
 
         <zip destfile="${dist.dir}/${jar.name}-bin-${version.id}-${DSTAMP}.zip">
@@ -1407,7 +1412,7 @@ under the License.
                 <patternset refid="src.dist.patterns"/>
             </zipfileset>
         </zip>
-        
+
         <tar destfile="${dist.dir}/${jar.name}-bin-${version.id}-${DSTAMP}.tar.gz"
                longfile="gnu"
                compression="gzip">
@@ -1436,7 +1441,7 @@ under the License.
                 <patternset refid="src.dist.patterns"/>
             </tarfileset>
         </tar>
-         
+
         <!-- script to create signatures and hashes -->
         <copy file="maven/multisign.sh" todir="${dist.dir}"/>
 
@@ -1458,25 +1463,25 @@ under the License.
     <target name="maven.ant.tasks-check">
       <fail unless="maven.ant.tasks.present">
       Maven ant tasks not found.
-      Please make sure the maven-ant-tasks jar is in ANT_HOME/lib, or made 
+      Please make sure the maven-ant-tasks jar is in ANT_HOME/lib, or made
       available to Ant using other mechanisms like -lib or CLASSPATH.
-      
+
       You can download the Maven Ant Tasks from http://maven.apache.org/ant-tasks/download.html
       </fail>
     </target>
 
     <macrodef name="m2-install">
       <attribute name="artifactId"/>
-      
+
       <sequential>
         <mvn:install file="${dist.dir}/@{artifactId}-${version.id}-${DSTAMP}.jar">
           <pom file="${dist.dir}/@{artifactId}-${version.id}.pom"/>
         </mvn:install>
       </sequential>
-    </macrodef>  
+    </macrodef>
 
     <!--
-      Install POI artifacts into the local repository. 
+      Install POI artifacts into the local repository.
       Invoking this command is equivalent to 'mvn install' in Maven-driven projects.
     -->
     <target name="mvn-install" depends="maven.ant.tasks-check,jar,maven-poms">
@@ -1487,7 +1492,7 @@ under the License.
       <m2-install artifactId="poi-ooxml-schemas"/>
       <m2-install artifactId="poi-excelant"/>
     </target>
-    
+
     <!-- Runs Apache Rat against the source code, to spot any files -->
     <!--  which are missing the correct license headers -->
     <!-- You need to download rat from http://incubator.apache.org/rat/ -->
@@ -1510,14 +1515,14 @@ under the License.
               <exclude name="examples/src/org/apache/poi/xslf/usermodel/pie-chart-data.txt" />
            </fileset>
        </rat:report>
-       
+
        <loadfile property="rat.reportcontent" srcFile="${rat.report}"/>
-       <echo>${rat.reportcontent}</echo> 
-       
+       <echo>${rat.reportcontent}</echo>
+
        <!-- fail the build if at least one note is in the report -->
        <fail><condition><matches pattern="[1-9][0-9]* Unknown Licens" string="${rat.reportcontent}"/></condition></fail>
     </target>
-	
+
 	<target name="findbugs"><!-- depends="assemble" -->
         <antcall target="downloadfile">
             <param name="sourcefile" value="http://prdownloads.sourceforge.net/findbugs/findbugs-noUpdateChecks-2.0.3.zip?download"/>
@@ -1531,7 +1536,7 @@ under the License.
 		    </patternset>
 			<mapper type="flatten"/>
 		</unzip>
-		
+
 		<property name="findbugs.home" value="build/findbugs" />
 		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask">
 			<classpath>
@@ -1557,7 +1562,7 @@ under the License.
 			<sourcePath path="src/java" />
 			<sourcePath path="src/ooxml/java" />
 			<sourcePath path="src/scratchpad/src" />
-		</findbugs>		
+		</findbugs>
 	</target>
 
 	<target name="test-scratchpad-download-resources">
@@ -1565,7 +1570,7 @@ under the License.
 		<!-- ... eventually copy the files into the resource dirs ... -->
 		<!--
 		<mkdir dir="build/scratchpad-test-resources"/>
-		
+
         <antcall target="downloadfile">
             <param name="sourcefile" value="http://sourceforge.net/projects/monafont/files/monafont/monafont-2.90/monafont-ttf-2.90.zip/download"/>
             <param name="destfile" value="build/scratchpad-test-resources/monafont-ttf-2.90.zip"/>
@@ -1577,12 +1582,12 @@ under the License.
 		        <include name="mona.ttf"/>
 		    </patternset>
 		</unzip>
-		
+
         <antcall target="downloadfile">
             <param name="sourcefile" value="https://googlefontdirectory.googlecode.com/hg-history/c5955de4df3e40f6ab705bbccbd1f5ad93998287/cabin/Cabin-Regular.ttf"/>
             <param name="destfile" value="build/scratchpad-test-resources/Cabin-Regular.ttf"/>
         </antcall>
         -->
 	</target>
-	
+
 </project>

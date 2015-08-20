@@ -19,6 +19,8 @@ package org.apache.poi.hssf.usermodel;
 
 import org.apache.poi.ss.formula.EvaluationCell;
 import org.apache.poi.ss.formula.EvaluationSheet;
+import org.apache.poi.ss.formula.eval.ValueEval;
+
 /**
  * HSSF wrapper for a cell under evaluation
  */
@@ -70,4 +72,9 @@ final class HSSFEvaluationCell implements EvaluationCell {
 	public int getCachedFormulaResultType() {
 		return _cell.getCachedFormulaResultType();
 	}
+
+	public ValueEval getValueEval(){
+		return _cell.getValueEval();
+	}
+
 }

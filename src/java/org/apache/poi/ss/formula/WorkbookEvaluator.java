@@ -396,6 +396,10 @@ public final class WorkbookEvaluator {
 		if (cell == null) {
 			return BlankEval.instance;
 		}
+		return cell.getValueEval();
+/*		if (cell == null) {
+			return BlankEval.instance;
+		}
 		int cellType = cell.getCellType();
 		switch (cellType) {
 			case Cell.CELL_TYPE_NUMERIC:
@@ -409,7 +413,7 @@ public final class WorkbookEvaluator {
 			case Cell.CELL_TYPE_ERROR:
 				return ErrorEval.valueOf(cell.getErrorCellValue());
 		}
-		throw new RuntimeException("Unexpected cell type (" + cellType + ")");
+		throw new RuntimeException("Unexpected cell type (" + cellType + ")");*/
 	}
 
 

@@ -132,4 +132,21 @@ final class ForkedEvaluationCell implements EvaluationCell {
         return _masterCell.getCachedFormulaResultType();
     }
 
+	public ValueEval getValueEval(){
+		int cellType = getCellType();
+		switch (cellType) {
+			case Cell.CELL_TYPE_NUMERIC:
+				return new NumberEval(getNumericCellValue());
+			case Cell.CELL_TYPE_STRING:
+				return new StringEval(getStringCellValue());
+			case Cell.CELL_TYPE_BOOLEAN:
+				return BoolEval.valueOf(getBooleanCellValue());
+			case Cell.CELL_TYPE_BLANK:
+				return BlankEval.instance;
+			case Cell.CELL_TYPE_ERROR:
+				return ErrorEval.valueOf(getErrorCellValue());
+		}
+		throw new RuntimeException("Unexpected cell type (" + cellType + ")");
+	}
+
 }

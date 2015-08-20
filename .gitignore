@@ -5,3 +5,6 @@ compile-lib/
 ooxml-lib/
 /nbproject/private/
 /dist/
+/poi2/nbproject/private/
+/nbproject/
+nbbuild.xml

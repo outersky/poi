@@ -190,6 +190,42 @@ public class XSSFRow implements Row, Comparable<XSSFRow> {
     	return getCell(cellnum, _sheet.getWorkbook().getMissingCellPolicy());
     }
 
+    XSSFCell[] _frozenCells;
+    // freeze cell for speed.
+    public void freeze(){
+        int maxIndex = 0;
+        for(int rowIndex : _cells.keySet()){
+            if(rowIndex>maxIndex){
+                maxIndex = rowIndex;
+            }
+        }
+        XSSFCell[] frozenCells = new XSSFCell[maxIndex+1];
+        for(XSSFCell cell : _cells.values()){
+            frozenCells[cell.getColumnIndex()] = cell;
+            cell.freeze();
+        }
+        _frozenCells = frozenCells;
+        _cells.clear(); // free memory
+    }
+
+    public boolean isFrozen(){
+        return _frozenCells!=null;
+    }
+
+    public XSSFCell[] getFrozenCells(){
+        return _frozenCells;
+    }
+
+    public XSSFCell getCell0(int cellnum){
+        if(_frozenCells!=null){
+            if(cellnum>=0 && cellnum<_frozenCells.length) {
+                return _frozenCells[cellnum];
+            }else{
+                return null;
+            }
+        }
+        return _cells.get(cellnum);
+    }
     /**
      * Returns the cell at the given (0 based) index, with the specified {@link org.apache.poi.ss.usermodel.Row.MissingCellPolicy}
      *
@@ -202,7 +238,7 @@ public class XSSFRow implements Row, Comparable<XSSFRow> {
     public XSSFCell getCell(int cellnum, MissingCellPolicy policy) {
     	if(cellnum < 0) throw new IllegalArgumentException("Cell index must be >= 0");
 
-        XSSFCell cell = _cells.get(cellnum);
+        XSSFCell cell = getCell0(cellnum); // _cells.get(cellnum);
     	if(policy == RETURN_NULL_AND_BLANK) {
     		return cell;
     	}

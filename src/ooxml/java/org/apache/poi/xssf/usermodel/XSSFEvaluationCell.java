@@ -19,6 +19,7 @@ package org.apache.poi.xssf.usermodel;
 
 import org.apache.poi.ss.formula.EvaluationCell;
 import org.apache.poi.ss.formula.EvaluationSheet;
+import org.apache.poi.ss.formula.eval.ValueEval;
 
 /**
  * XSSF wrapper for a cell under evaluation
@@ -60,7 +61,18 @@ final class XSSFEvaluationCell implements EvaluationCell {
 	public int getErrorCellValue() {
 		return _cell.getErrorCellValue();
 	}
-	public double getNumericCellValue() {
+
+    /**
+     * get ValueEval for evaluation
+     *
+     * @return
+     */
+    @Override
+    public ValueEval getValueEval() {
+        return _cell.getValueEval();
+    }
+
+    public double getNumericCellValue() {
 		return _cell.getNumericCellValue();
 	}
 	public int getRowIndex() {
@@ -69,8 +81,10 @@ final class XSSFEvaluationCell implements EvaluationCell {
 	public EvaluationSheet getSheet() {
 		return _evalSheet;
 	}
+
 	public String getStringCellValue() {
-		return _cell.getRichStringCellValue().getString();
+//        return _cell.getRichStringCellValue().getString();
+        return _cell.getRichString();  // invoke the new added cachable method.
 	}
 	public int getCachedFormulaResultType() {
 		return _cell.getCachedFormulaResultType();

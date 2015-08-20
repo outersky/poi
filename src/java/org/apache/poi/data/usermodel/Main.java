@@ -1,7 +1,7 @@
+/*
 package org.apache.poi.data.usermodel;
 
 import java.io.FileInputStream;
-import org.apache.poi.data.usermodel.formula.Evaluator;
 import org.apache.poi.hssf.usermodel.HSSFDataFormatter;
 import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -13,9 +13,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-/**
- *
- */
 public class Main {
     
     static HSSFDataFormatter df = new HSSFDataFormatter();
@@ -31,15 +28,7 @@ public class Main {
     
     private static void testPoi() throws Exception {
         Workbook wb = WorkbookFactory.create(new FileInputStream("/tmp/sw.xls"));
-        
-        Evaluator.registerAll(wb);
-        HSSFSheet sheet1 = (HSSFSheet) wb.getSheet("项目清单（宏站）");
-        HSSFSheet sheet2 = (HSSFSheet) wb.getSheet("项目清单（室分）");
-        sheet1.freeze();
-        sheet2.freeze();
-
         evaluate(wb);
-        
     }
     
     private static void evaluate(Workbook wb){
@@ -70,3 +59,4 @@ public class Main {
         System.out.print(" [" + c.getRowIndex() + "-" + c.getColumnIndex() + " : "  + obj.toString() + "] ");
     }
 }
+*/

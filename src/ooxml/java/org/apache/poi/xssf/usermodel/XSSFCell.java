@@ -27,7 +27,7 @@ import org.apache.poi.ss.formula.FormulaParser;
 import org.apache.poi.ss.formula.FormulaRenderer;
 import org.apache.poi.ss.formula.FormulaType;
 import org.apache.poi.ss.formula.SharedFormula;
-import org.apache.poi.ss.formula.eval.ErrorEval;
+import org.apache.poi.ss.formula.eval.*;
 import org.apache.poi.ss.formula.ptg.Ptg;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -186,6 +186,7 @@ public final class XSSFCell implements Cell {
         _cell.setV(value ? TRUE_AS_STRING : FALSE_AS_STRING);
     }
 
+    private Double _numericCellValue = null;
     /**
      * Get the value of the cell as a number.
      * <p>
@@ -199,22 +200,32 @@ public final class XSSFCell implements Cell {
      */
     @Override
     public double getNumericCellValue() {
+        if(_frozen && _numericCellValue!=null){
+            return _numericCellValue;
+        }
+
         int cellType = getCellType();
         switch(cellType) {
             case CELL_TYPE_BLANK:
-                return 0.0;
+                _numericCellValue = 0.0;
+                return _numericCellValue;
             case CELL_TYPE_FORMULA:
             case CELL_TYPE_NUMERIC:
                 if(_cell.isSetV()) {
                    String v = _cell.getV();
-                   if (v.isEmpty()) return 0.0;
+                   if (v.isEmpty()) {
+                       _numericCellValue = 0.0;
+                       return _numericCellValue;
+                   }
                    try {
-                      return Double.parseDouble(v);
+                       _numericCellValue =  Double.parseDouble(v);
+                       return _numericCellValue;
                    } catch(NumberFormatException e) {
                       throw typeMismatch(CELL_TYPE_NUMERIC, CELL_TYPE_STRING, false);
                    }
                 } else {
-                   return 0.0;
+                    _numericCellValue = 0.0;
+                   return _numericCellValue;
                 }
             default:
                 throw typeMismatch(CELL_TYPE_NUMERIC, cellType, false);
@@ -261,6 +272,21 @@ public final class XSSFCell implements Cell {
         return str == null ? null : str.getString();
     }
 
+    public static int normalCount=0;
+    public static int cacheCount = 0;
+    private String _richString = null;
+    // added for XSSFEvaluationCell with cache support for frozen cells.
+    public String getRichString(){
+        if(_frozen && _richString!=null){
+            cacheCount ++;
+            return _richString;
+        }
+        normalCount ++;
+        _richString = getRichStringCellValue().getString();
+        return _richString;
+    }
+
+    private XSSFRichTextString _richTextString = null;
     /**
      * Get the value of the cell as a XSSFRichTextString
      * <p>
@@ -271,6 +297,10 @@ public final class XSSFCell implements Cell {
      */
     @Override
     public XSSFRichTextString getRichStringCellValue() {
+        if(_frozen && _richTextString!=null){
+            return _richTextString;
+        }
+
         int cellType = getCellType();
         XSSFRichTextString rt;
         switch (cellType) {
@@ -309,6 +339,7 @@ public final class XSSFCell implements Cell {
                 throw typeMismatch(CELL_TYPE_STRING, cellType, false);
         }
         rt.setStylesTableReference(_stylesSource);
+        _richTextString = rt;
         return rt;
     }
 
@@ -531,6 +562,16 @@ public final class XSSFCell implements Cell {
         }
     }
 
+    protected boolean _frozen = false;
+    private Integer _cellType = null;
+
+    // freeze cell for speed.
+    public void freeze(){
+        _frozen = true;
+    }
+    public boolean isFrozen(){
+        return _frozen;
+    }
     /**
      * Return the cell type.
      *
@@ -544,12 +585,16 @@ public final class XSSFCell implements Cell {
      */
     @Override
     public int getCellType() {
-
-        if (_cell.getF() != null || getSheet().isCellInArrayFormulaContext(this)) {
-            return CELL_TYPE_FORMULA;
+        if(_frozen && _cellType != null){
+            return _cellType;
+        }
+        if ( _cell.getF() != null || getSheet().isCellInArrayFormulaContext(this)) {
+            _cellType = CELL_TYPE_FORMULA;
+        }else{
+            _cellType = getBaseCellType(true);
         }
 
-        return getBaseCellType(true);
+        return _cellType ;
     }
 
     /**
@@ -595,6 +640,7 @@ public final class XSSFCell implements Cell {
         }
     }
 
+    private Date _dateCellValue = null;
     /**
      * Get the value of the cell as a date.
      * <p>
@@ -607,6 +653,9 @@ public final class XSSFCell implements Cell {
      */
     @Override
     public Date getDateCellValue() {
+        if(_frozen && _dateCellValue!=null){
+            return _dateCellValue;
+        }
         int cellType = getCellType();
         if (cellType == CELL_TYPE_BLANK) {
             return null;
@@ -614,7 +663,8 @@ public final class XSSFCell implements Cell {
 
         double value = getNumericCellValue();
         boolean date1904 = getSheet().getWorkbook().isDate1904();
-        return DateUtil.getJavaDate(value, date1904);
+        _dateCellValue = DateUtil.getJavaDate(value, date1904);
+        return _dateCellValue;
     }
 
     /**
@@ -1109,5 +1159,38 @@ public final class XSSFCell implements Cell {
         String msg = "Cell "+ref.formatAsString()+" is part of a multi-cell array formula. " +
                 "You cannot change part of an array.";
         notifyArrayFormulaChanging(msg);
+    }
+
+    public ValueEval getValueEval() {
+        if(_frozen){
+            return getValueEval0();
+        }
+        return getValueEval1();
+    }
+
+    private ValueEval _valueEval = null;
+    private ValueEval getValueEval0() {
+        if(_valueEval!=null){
+            return _valueEval;
+        }
+        _valueEval = getValueEval1();
+        return _valueEval;
+    }
+
+    private ValueEval getValueEval1(){
+        int cellType = getCellType();
+        switch (cellType) {
+            case Cell.CELL_TYPE_NUMERIC:
+                return new NumberEval(getNumericCellValue());
+            case Cell.CELL_TYPE_STRING:
+                return new StringEval(getRichString());
+            case Cell.CELL_TYPE_BOOLEAN:
+                return BoolEval.valueOf(getBooleanCellValue());
+            case Cell.CELL_TYPE_BLANK:
+                return BlankEval.instance;
+            case Cell.CELL_TYPE_ERROR:
+                return ErrorEval.valueOf(getErrorCellValue());
+        }
+        throw new RuntimeException("Unexpected cell type (" + cellType + ")");
     }
 }

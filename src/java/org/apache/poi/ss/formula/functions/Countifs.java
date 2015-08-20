@@ -108,13 +108,11 @@ public class Countifs implements FreeRefFunction {
         int height = ranges[0].getHeight();
         int width = ranges[0].getWidth();
 
-//        System.err.println("Width: " + width);
         int result = 0;
         for (int r = 0; r < height; r++) {
             outer: 
             for (int c = 0; c < width; c++) {
 
-                boolean matches = true;
                 for (int i = 0; i < ranges.length; i++) {
                     AreaEval aeRange = ranges[i];
                     CountUtils.I_MatchPredicate mp = predicates[i];
@@ -122,16 +120,12 @@ public class Countifs implements FreeRefFunction {
                     ValueEval relativeValue = aeRange.getRelativeValue(r, c);
                     if (!mp.matches(relativeValue)) {
                         continue outer;
-//                        matches = false;
-//                        break;
                     }
 
                 }
 
-                if (matches) { // count only if all of the corresponding
-                    // criteria specified are true for that cell.
-                    result += 1;
-                }
+                // criteria specified are true for that cell.
+                result += 1;
             }
         }
         return result;

@@ -1159,7 +1159,53 @@ public class XSSFSheet extends POIXMLDocumentPart implements Sheet {
         if (!isSheetProtectionEnabled()) return (password == null);
         return validatePassword(safeGetProtectionField(), password, null);
     }
-    
+
+    XSSFRow[] _frozenRows;
+
+    public boolean isFrozen(){
+        return _frozenRows!=null;
+    }
+
+    // freeze cell for speed.
+    public void freeze(){
+        int maxIndex = 0;
+        for(int rowIndex : _rows.keySet()){
+            if(rowIndex>maxIndex){
+                maxIndex = rowIndex;
+            }
+        }
+        XSSFRow[] frozenRows = new XSSFRow[maxIndex+1];
+        for(XSSFRow row : _rows.values()){
+            frozenRows[row.getRowNum()] = row;
+            row.freeze();
+        }
+        _frozenRows = frozenRows;
+        _rows.clear(); // free memory
+    }
+
+    public XSSFRow[] getFrozenRows(){
+        return _frozenRows;
+    }
+
+    /**
+     * Returns the logical row (not physical) 0-based.  If you ask for a row that is not
+     * defined you get a null.  This is to say row 4 represents the fifth row on a sheet.
+     *
+     * @param rowIndex row to get
+     * @return HSSFRow representing the row number or null if its not defined on the sheet
+     */
+    @Override
+    public XSSFRow getRow(int rowIndex) {
+        if(_frozenRows!=null){
+            if(rowIndex>=0 && rowIndex<_frozenRows.length) {
+                return _frozenRows[rowIndex];
+            }else{
+                return null;
+            }
+        }
+        return _rows.get(Integer.valueOf(rowIndex));
+    }
+
     /**
      * Returns the logical row ( 0-based).  If you ask for a row that is not
      * defined you get a null.  This is to say row 4 represents the fifth row on a sheet.
@@ -1167,10 +1213,10 @@ public class XSSFSheet extends POIXMLDocumentPart implements Sheet {
      * @param rownum  row to get
      * @return <code>XSSFRow</code> representing the rownumber or <code>null</code> if its not defined on the sheet
      */
-    @Override
+    /*@Override
     public XSSFRow getRow(int rownum) {
         return _rows.get(rownum);
-    }
+    }*/
 
     /**
      * Horizontal page break information used for print layout view, page layout view, drawing print breaks in normal
